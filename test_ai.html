@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Your AI Agent</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; }
+        .chat-container { border: 1px solid #ccc; padding: 20px; border-radius: 10px; }
+        .message { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .user { background: #e3f2fd; text-align: right; }
+        .ai { background: #f5f5f5; }
+        input, button { padding: 10px; margin: 5px; }
+        input { width: 70%; }
+    </style>
+</head>
+<body>
+    <h1>🤖 Test Your AI Customer Service Agent</h1>
+    
+    <div class="chat-container" id="chat">
+        <div class="message ai">
+            <strong>AI:</strong> Hello! I'm your customer service AI. How can I help you today?
+        </div>
+    </div>
+
+    <div>
+        <input type="text" id="messageInput" placeholder="Type your question here..." onkeypress="handleKeyPress(event)">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <div style="margin-top: 20px;">
+        <h3>Quick Test Questions:</h3>
+        <button onclick="quickQuestion('Where is my order?')">Order Status</button>
+        <button onclick="quickQuestion('Do you have blue t-shirts in stock?')">Product Question</button>
+        <button onclick="quickQuestion('How long does shipping take?')">Shipping</button>
+        <button onclick="quickQuestion('I want to return my purchase')">Returns</button>
+    </div>
+
+    <script>
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                // Add user message to chat
+                addMessage('user', message);
+                input.value = '';
+                
+                // Call AI API
+                fetch(`http://localhost:8000/ai/chat-test?message=${encodeURIComponent(message)}&social_media_id=web_user_${Date.now()}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        addMessage('ai', data.response);
+                        console.log('AI Response:', data);
+                    })
+                    .catch(error => {
+                        addMessage('ai', 'Sorry, I encountered an error. Please check if the server is running.');
+                        console.error('Error:', error);
+                    });
+            }
+        }
+
+        function quickQuestion(question) {
+            document.getElementById('messageInput').value = question;
+            sendMessage();
+        }
+
+        function addMessage(sender, text) {
+            const chat = document.getElementById('chat');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            messageDiv.innerHTML = `<strong>${sender === 'user' ? 'You' : 'AI'}:</strong> ${text}`;
+            chat.appendChild(messageDiv);
+            chat.scrollTop = chat.scrollHeight;
+        }
+    </script>
+</body>
+</html>
