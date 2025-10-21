@@ -1,22 +1,28 @@
+
 import os
-from dotenv import load_dotenv
+from pydantic_settings import BaseSettings
 
-load_dotenv()
-
-class Settings:
-    # Application
-    APP_NAME = os.getenv("APP_NAME", "Social Media AI Agent")
-    DEBUG = os.getenv("DEBUG", "True").lower() == "true"
-    ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
+class Settings(BaseSettings):
+    # Application - Use defaults instead of environment variables
+    APP_NAME: str = "MissTera AI Agent"
+    DEBUG: bool = False
+    ENVIRONMENT: str = "production"
     
-    # Security
-    ENCRYPTION_KEY = os.getenv("ENCRYPTION_KEY")
-    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
+    # Security - These MUST be set in environment variables
+    ENCRYPTION_KEY: str
+    JWT_SECRET_KEY: str
+    
+    # AI API
+    GROQ_API_KEY: str
     
     # Database
-    DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./social_ai_agent.db")
+    DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./social_ai_agent.db")
     
     # CORS
-    CORS_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000"]
+    CORS_ORIGINS: list = ["*"]
+
+    class Config:
+        # Don't rely on .env file in production
+        env_file = None
 
 settings = Settings()
