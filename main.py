@@ -1,3 +1,4 @@
+import os
 from app.services.conversation_manager import get_conversation_manager
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -182,9 +183,11 @@ async def ai_chat_test_endpoint(
 
 if __name__ == "__main__":
     import uvicorn
+    port = int(os.environ.get("PORT", 8000))
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
-        port=8000,
-        reload=True
+        port=port,
+        reload=False
+    
     )
