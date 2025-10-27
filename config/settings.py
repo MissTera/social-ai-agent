@@ -1,9 +1,8 @@
-
 import os
-from pydantic_settings import BaseSettings
+from pydantic import BaseSettings
 
 class Settings(BaseSettings):
-    # Application - Use defaults instead of environment variables
+    # Application
     APP_NAME: str = "MissTera AI Agent"
     DEBUG: bool = False
     ENVIRONMENT: str = "production"
@@ -20,9 +19,5 @@ class Settings(BaseSettings):
     
     # CORS
     CORS_ORIGINS: list = ["*"]
-
-    class Config:
-        # Don't rely on .env file in production
-        env_file = None
 
 settings = Settings()
