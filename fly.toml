@@ -1,0 +1,22 @@
+app = "social-ai-agent"
+primary_region = "iad"  # Virginia - good for US
+
+[build]
+  image = "flyio/python:3.11"
+
+[env]
+  PORT = "8080"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+
+[[http_service.checks]]
+  grace_period = "1s"
+  interval = "15s"
+  method = "GET"
+  path = "/health"
+  timeout = "2s"
